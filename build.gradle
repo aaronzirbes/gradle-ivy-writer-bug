@@ -1,0 +1,52 @@
+ext.minGradleVersion = GradleVersion.version('1.9')
+ext.recommendedGradleVersion = GradleVersion.version('1.10')
+
+if (GradleVersion.current() < minGradleVersion) {
+    throw new GradleException("This build requires Gradle ${minGradleVersion}+ and you are running [${GradleVersion.current()}]")
+} else if (GradleVersion.current() < recommendedGradleVersion) {
+    logger.warn("Building with Gradle versions < ${recommendedGradleVersion} is deprecated and may break. Please update to Gradle ${recommendedGradleVersion}+")
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            name 'Grails Artifactory'
+            url 'http://repo.grails.org/grails/repo'
+        }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.grails:grails-gradle-plugin:2.0.0-SNAPSHOT"
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        name 'Grails Artifactory'
+        url 'http://repo.grails.org/grails/repo'
+    }
+    maven {
+        name 'Spring Source Artifactory'
+        url 'http://repo.springsource.org/repo'
+    }
+    mavenCentral()
+}
+
+
+version "0.1"
+group "org.gradle.bugs.example"
+
+apply plugin: "grails"
+
+grails {
+    grailsVersion project.grailsVersion
+    springLoadedVersion '1.1.4'
+}
+
+dependencies {
+    bootstrap "org.grails:grails-plugin-tomcat:${project.grails.grailsVersion}"
+}
+
